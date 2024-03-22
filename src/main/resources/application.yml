@@ -1,0 +1,93 @@
+spring:
+  application:
+    name: resilience4j-demo
+
+server:
+  port: 8080
+
+
+resilience4j:
+  retry:
+    instances:
+      retryA:
+        max-attempts: 5
+        wait-duration: 1s
+
+  circuitbreaker:
+    instances:
+      backendA:
+        failureRateThreshold: 50  # 以百分比配置失败率阈值。当失败率等于或大于阈值时，断路器状态并关闭变为开启，并进行服务降级
+        slidingWindowType: COUNT_BASED  # 配置滑动窗口的类型：统计次数
+        slidingWindowSize: 10  # 滑动窗口大小
+        slowCallRateThreshold: 50   # 慢调用比例
+        slowCallDurationThreshold: 500  # 慢调用时间ms
+        minimumNumberOfCalls: 4  # 断路器计算失败率或慢调用率之前所需的最小调用数
+        waitDurationInOpenState: 5s # 断路器从开启过渡到半开应等待的时间
+        permittedNumberOfCallsInHalfOpenState: 2  # 断路器在半开状态下允许通过的调用次数
+        automaticTransitionFromOpenToHalfOpenEnabled: true  # 断路器将自动从开启状态过渡到半开状态，并且不需要调用来触发转换
+
+  bulkhead:
+    instances:
+      bulkHeadA:
+        maxConcurrentCalls: 1   # 隔离允许线程并发执行的最大数量
+        maxWaitDuration: 0      # 当达到并发调用数量时，新的线程执行时将被阻塞，这个属性表示最长的等待时间
+
+
+#resilience4j.retry:
+#  instances:
+#    backendA:CallNotPermittedException
+#      maxAttempts: 3
+#      waitDuration: 10s
+#      enableExponentialBackoff: true
+#      exponentialBackoffMultiplier: 2
+#      retryExceptions:
+#        - org.springframework.web.client.HttpServerErrorException
+#        - java.io.IOException
+#      ignoreExceptions:
+#        - io.github.robwin.exception.BusinessException
+#    backendB:
+#      maxAttempts: 3
+#      waitDuration: 10s
+#      retryExceptions:
+#        - org.springframework.web.client.HttpServerErrorException
+#        - java.io.IOException
+#      ignoreExceptions:
+#        - io.github.robwin.exception.BusinessException
+#
+#resilience4j.bulkhead:
+#  instances:
+#    backendA:
+#      maxConcurrentCalls: 10
+#    backendB:
+#      maxWaitDuration: 10ms
+#      maxConcurrentCalls: 20
+#
+#resilience4j.thread-pool-bulkhead:
+#  instances:
+#    backendC:
+#      maxThreadPoolSize: 1
+#      coreThreadPoolSize: 1
+#      queueCapacity: 1
+#      writableStackTraceEnabled: true
+#
+#resilience4j.ratelimiter:
+#  instances:
+#    backendA:
+#      limitForPeriod: 10
+#      limitRefreshPeriod: 1s
+#      timeoutDuration: 0
+#      registerHealthIndicator: true
+#      eventConsumerBufferSize: 100
+#    backendB:
+#      limitForPeriod: 6
+#      limitRefreshPeriod: 500ms
+#      timeoutDuration: 3s
+#
+#resilience4j.timelimiter:
+#  instances:
+#    backendA:
+#      timeoutDuration: 2s
+#      cancelRunningFuture: true
+#    backendB:
+#      timeoutDuration: 1s
+#      cancelRunningFuture: false
