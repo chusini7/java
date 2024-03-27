@@ -24,7 +24,7 @@ public class TestController {
 
     // @Retry(name = "retryA", fallbackMethod = "fallback")
     // @Bulkhead(name = "bulkHeadA", type = Bulkhead.Type.THREADPOOL, fallbackMethod = "fallback")
-    @CircuitBreaker(name = "backendA", fallbackMethod = "fallback")
+    @CircuitBreaker(name = "backendA", fallbackMethod = "fallInternalResourceViewResolverback")
     @GetMapping("/demo")
     public String demo() {
         int anInt = new Random().nextInt(100);
