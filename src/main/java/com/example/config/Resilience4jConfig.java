@@ -13,6 +13,7 @@ import java.time.Duration;
  */
 // @Configuration
 public class Resilience4jConfig {
+    
 
     @Bean
     public CircuitBreakerRegistry circuitBreakerRegistry(){
